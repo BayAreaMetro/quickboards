@@ -81,6 +81,7 @@ public class QuickBoards {
     Vector mLinePatterns = new Vector();
     String mSelectedTimePeriods = "";
     String mOutFile = "quickboards.xls";
+    String mFilePrefix = null;
 	String mNodesFile = null;
     boolean mPrepareSummary = true;
     WritableWorkbook wb = null;
@@ -91,6 +92,7 @@ public class QuickBoards {
         if (args.length == 0) {
             System.err.println("Usage:\nquickboards  ctlfile  [outfile]\n");
             System.err.println("Control file keywords:\n\n");
+            System.err.println("FilePrefix= [] Prefix of files to read");
             System.err.println("NodesFile=  [f:\\champ\\util\\nodes.xls] path of nodes.xls lookup file");
             System.err.println("TimePeriods=[am,md,pm,ev,ea] list of time periods to analyze");
             System.err.println("LineStats=  [t|f] true/false to create summary stats for all lines");
@@ -123,6 +125,7 @@ public class QuickBoards {
             if (!"".equals(stations))
                 prepareStationLevelBoardings(stations);
 
+            mFilePrefix = ctlFile.getProperty("FilePrefix", "");
             mNodesFile = ctlFile.getProperty("NodesFile","f:\\champ\\util\\nodes.xls");
 
             String summary = ctlFile.getProperty("Summary","t");
@@ -307,8 +310,8 @@ public class QuickBoards {
           while (pthEnum.hasMoreElements()) {
             String pth = (String) pthEnum.nextElement();
 
-            String dbfFile = parentDir + File.separator + 
-            	pth + mTimePeriods[period]+".dbf";
+            String dbfFile = parentDir + File.separator + mFilePrefix +
+            	mTimePeriods[period] + pth + ".dbf";
             DBFReader dbf = null;
             
             try {
